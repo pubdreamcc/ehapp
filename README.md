@@ -3,7 +3,7 @@
 
 1. 全局安装：`npm install ehapp -g`
 
-2. 新创建一个app项目：`ehapp init test-app`，默认创建的项目不引入ts，如需引入ts类型校验，可带参数 `-ts` eg: `ehapp init test-app -ts`
+2. 新创建一个app项目：`ehapp init test-app`，如需引入react hooks类型校验及hook语法封装lib，可带参数 `-hook` eg: `ehapp init test-app -hook`
 
 > app 项目命名规范：单独英文或英文 + `-` 命名方式
 
@@ -17,8 +17,10 @@
 
 - [x] `ehapp init xx // create an app template ` 
 
-- [x] `ehapp init xx -ts or ehapp -ts init xx  // create an app template based on typescript `  
+- [x] `ehapp init xx -hook // create an app template based on react hooks `  
 
 - [ ] `ehapp --help or -h // output ehapp command information`
+
+- [ ] `ehapp init xx -ts // create an app template based on typescript`
 
 ...
