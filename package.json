@@ -1,14 +1,10 @@
 {
   "name": "ehapp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "a company react-app template ",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/pubdreamcc/ehapp.git"
   },
   "keywords": [
     "react-app"
@@ -18,10 +14,6 @@
   },
   "author": "pubdreamcc",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/pubdreamcc/ehapp/issues"
-  },
-  "homepage": "https://github.com/pubdreamcc/ehapp#readme",
   "dependencies": {
     "chalk": "^4.1.0",
     "commander": "^7.0.0",
