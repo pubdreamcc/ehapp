@@ -2,7 +2,7 @@
 
 ## TODO
 
-- [x] 支持快速生成 react 模版和 react-hooks 模版；
+- [x] 支持快速生成 react 模版或者react-hooks 模版；
 - [x] eslint，prettier，stylelint 校验规范；
 - [x] husky 代码提交校验；
 - [x] 自动校验模块文件名，防止文件覆盖；
@@ -12,11 +12,13 @@
 
 1. 全局安装：`npm install ehapp -g`
 
-2. 新创建一个app项目：`ehapp --init test-app`
+2. 新创建一个app项目：`ehapp --init`
 
 > app 项目命名规范：单独英文或英文 + `-` 命名方式
 
 3. 业务开发，打包，将文件拖入zapp repo 统一托管
+
+> 建议在 zapp 目录下运行 `ehapp -i` 来获取相同文件名格式校验
 
 ## 脚手架常用命令
 
