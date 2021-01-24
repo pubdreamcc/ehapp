@@ -59,11 +59,13 @@ const questions = [
     type: "input",
     name: "description",
     message: "请输入项目简介",
+    suffix: '(enter 跳过)'
   },
   {
     type: "input",
     name: "author",
     message: "请输入作者名称",
+    suffix: '(enter 跳过)'
   },
   {
     type: "list",
