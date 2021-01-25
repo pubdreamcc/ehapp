@@ -1,6 +1,6 @@
 {
   "name": "ehapp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a company react-app template ",
   "main": "index.js",
   "scripts": {

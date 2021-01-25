@@ -96,7 +96,7 @@ const downloadTemplate = (gitUrl, projectName) => {
 };
 
 const changeTemplate = async (answers) => {
-  const { projectName = "", description = "", author = "" } = answers;
+  const { projectName, description = "", author = "", template } = answers;
   const command = `cd ${projectName} && rm -rf .git`;
   try {
     execSync(command);
@@ -119,6 +119,9 @@ ${command}`
         packageContent.name = projectName;
         packageContent.author = author;
         packageContent.description = description;
+        if (template.split(" ")[0].includes('hooks')) {
+          packageContent.config.commitizen.path = './' + path.join(projectName, packageContent.config.commitizen.path);
+        }
         fs.writeFile(
           path.resolve(process.cwd(), projectName, "package.json"),
           JSON.stringify(packageContent, null, 2),
