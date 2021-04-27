@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const execSync = require('child_process').execSync;
+const execSync = require("child_process").execSync;
 const chalk = require("chalk");
 const ora = require("ora");
 const download = require("download-git-repo");
@@ -33,7 +33,7 @@ const checkName = (projectName) => {
   });
 };
 
-const questions = [
+const initQus = [
   {
     type: "input",
     name: "projectName",
@@ -59,19 +59,52 @@ const questions = [
     type: "input",
     name: "description",
     message: "请输入项目简介",
-    suffix: '(enter 跳过)'
+    suffix: "(enter 跳过)",
   },
   {
     type: "input",
     name: "author",
     message: "请输入作者名称",
-    suffix: '(enter 跳过)'
+    suffix: "(enter 跳过)",
   },
   {
     type: "list",
     name: "template",
     message: "选择其中一个作为项目模版",
     choices: ["react-hooks (hooks项目模版)", "react (react项目模版)"],
+  },
+];
+
+const deployQus = [
+  {
+    type: "confirm",
+    message: chalk.green("是否已经打包完成"),
+    name: "isBuild",
+    suffix: "(enter 确认)",
+  },
+  {
+    type: "list",
+    name: "offline",
+    message: chalk.green("是否为离线App"),
+    choices: ["No", "Yes"],
+    when: (answers) => {
+      return answers.isBuild;
+    },
+  },
+  {
+    type: "input",
+    name: "ip",
+    message: "请输入单元环境ip地址",
+    validate: (val) => {
+      const pattern = /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}/g;
+      if (!pattern.test(val)) {
+        return console.log(chalk.red("\n👉 ip 地址不合法"));
+      }
+      return true;
+    },
+    when: (answers) => {
+      return answers.isBuild;
+    },
   },
 ];
 
@@ -102,10 +135,10 @@ const changeTemplate = async (answers) => {
     execSync(command);
   } catch (error) {
     console.log(
-`${chalk.red(error)}\n
+      `${chalk.red(error)}\n
 delete the .git file fail, you may need to manually delete the.git file\n
 ${command}`
-);
+    );
   }
   return new Promise((resolve, reject) => {
     fs.readFile(
@@ -119,8 +152,10 @@ ${command}`
         packageContent.name = projectName;
         packageContent.author = author;
         packageContent.description = description;
-        if (template.split(" ")[0].includes('hooks')) {
-          packageContent.config.commitizen.path = './' + path.join(projectName, packageContent.config.commitizen.path);
+        if (template.split(" ")[0].includes("hooks")) {
+          packageContent.config.commitizen.path =
+            "./" +
+            path.join(projectName, packageContent.config.commitizen.path);
         }
         fs.writeFile(
           path.resolve(process.cwd(), projectName, "package.json"),
@@ -144,17 +179,58 @@ const initTemplateDefault = async (answers, gitUrl) => {
     await downloadTemplate(gitUrl, projectName);
     await changeTemplate(answers);
     console.log(
-`${chalk.bold.cyan("ehapp: ")} "A new app project has been created!"\n
+      `${chalk.bold.cyan("ehapp: ")} "A new app project has been created!"\n
 🚩🚩🚩--- happy coding ---🚩🚩🚩\n
 next：cd ${projectName} && npm/cnpm install && npm start`
-);
+    );
   } catch (error) {
     console.log(chalk.red(error));
   }
 };
 
+const getFilesDir = (offline) => {
+  const dirArr = [];
+  const basename = path.basename(process.cwd());
+  let notExitFiles = 0;
+  const remoteBaseName = "/data1/ehserver/server/resources/";
+  if (offline === "Yes") {
+    const humpName = basename.replace(/\-(\w)/g, (all, letter) => {
+      return letter.toUpperCase();
+    });
+    dirArr.push({
+      local: process.cwd(),
+      remote: `${remoteBaseName}nar/${humpName}`,
+    });
+  }
+  for (const item of ["build", "dist", "b"]) {
+    const dir = path.join(process.cwd(), item);
+    try {
+      const res = fs.statSync(dir);
+      if (res.isDirectory()) {
+        dirArr.push({
+          local: dir,
+          remote: `${remoteBaseName}${basename}/${item}`,
+        });
+        break;
+      }
+    } catch (error) {
+      notExitFiles++;
+      continue;
+    }
+  }
+  if (notExitFiles === 3) {
+    dirArr.push({
+      local: process.cwd(),
+      remote: `${remoteBaseName}${basename}`,
+    });
+  }
+  return dirArr;
+};
+
 module.exports = {
   templates,
-  questions,
+  initQus,
   initTemplateDefault,
+  deployQus,
+  getFilesDir,
 };
