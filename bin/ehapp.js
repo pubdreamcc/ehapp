@@ -70,7 +70,6 @@ if (options && options.deploy) {
           pArr.push(
             ssh.putDirectory(local, remote, {
               concurrency: 5,
-              // recursive: true,
               validate: (itemPath) => {
                 const baseName = path.basename(itemPath);
                 return (
